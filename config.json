@@ -12,7 +12,7 @@
 	},
 	"styles": {
 		"src_dir": "styles/",
-		"dest_dir": "js/",
+		"dest_dir": "css/",
 		"extension": ".scss"
 	}
 }

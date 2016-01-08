@@ -26,14 +26,22 @@ gulp.task('styles', function () {
 
     var source_dir = config.src_dir + config.styles.src_dir;
     var dest_dir = config.dest_dir + config.styles.dest_dir;
+    console.log(dest_dir);
 
     return gulp.src(source_dir + 'style' + config.styles.extension)
         .pipe( gulpif( enabled.maps, sourcemaps.init() ) )
         .pipe( postcss([ 
+            require('postcss-conditionals'),
+            require('postcss-import'),
+            require('postcss-sassy-mixins'),
+            require('postcss-map')({
+                basePath: source_dir + 'config/',
+                maps: [ 'breakpoints.yml' ]
+            }),
         	require('postcss-nested'),
-        	require('postcss-simple-vars'),
-        	require('postcss-import'),
+            require('postcss-simple-vars'),
         	require('lost'), 
+            require('rucksack-css'),
         	require('autoprefixer'), 
         	require('precss') 
         ]) )
