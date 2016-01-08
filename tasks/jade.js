@@ -9,6 +9,10 @@ var livereload = require('gulp-livereload');
 // Jade Modules
 var jade = require('gulp-jade');
 
+// Configuration
+var fs = require('fs');
+var config = JSON.parse(fs.readFileSync('./config.json'));
+
 // CLI options
 var enabled = {
   // Disable source maps when `--production`
@@ -18,14 +22,18 @@ var enabled = {
 };
 
 gulp.task('templates', function() {
-  gulp.src( './src/templates/**/*.jade' )
+
+  var source_dir = config.src_dir + config.jade.src_dir;
+  var dest_dir = config.dest_dir + config.jade.dest_dir;
+
+  return gulp.src( source_dir + '**/*.jade' )
     .pipe( jade({
     	compileDebug: false,
     	pretty: !enabled.minify
     }) )
     .pipe( rename(function(path) {
-    	path.extname = '.html'; // change to something else
+    	path.extname = config.jade.extension;
     }) )
-    .pipe( gulp.dest('./build/') ) 
+    .pipe( gulp.dest(dest_dir) ) 
     .pipe( livereload() )
 });

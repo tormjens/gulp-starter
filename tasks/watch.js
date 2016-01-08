@@ -1,10 +1,13 @@
 var gulp       = require('gulp');
 var livereload = require('gulp-livereload');
 
+// Configuration
+var fs = require('fs');
+var config = JSON.parse(fs.readFileSync('./config.json'));
+
 gulp.task('watch', function() {
 	livereload.listen();
-
-	gulp.watch('./src/styles/**/*.scss', ['css']);
-	gulp.watch('./src/templates/**/*.jade', ['templates']);
-	gulp.watch('./src/scripts/**/*.coffee', ['scripts']);
+	gulp.watch(config.src_dir + config.styles.src_dir + '**/*' + config.styles.extension, ['css']);
+	gulp.watch(config.src_dir + config.jade.src_dir + '**/*.jade', ['templates']);
+	gulp.watch(config.src_dir + config.scripts.src_dir + '**/*.coffee', ['scripts']);
 });

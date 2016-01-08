@@ -1,0 +1,18 @@
+{
+	"src_dir": "./src/", 
+	"dest_dir": "./build/", 
+	"scripts": {
+		"src_dir": "scripts/", 
+		"dest_dir": "js/"
+	},
+	"jade": {
+		"src_dir": "templates/", 
+		"dest_dir": "",
+		"extension": ".html"
+	},
+	"styles": {
+		"src_dir": "styles/",
+		"dest_dir": "js/",
+		"extension": ".scss"
+	}
+}

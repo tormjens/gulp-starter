@@ -15,6 +15,10 @@ var coffeeify = require('coffeeify');
 var browserify = require('browserify');
 var uglify = require('gulp-uglify');
 
+// Configuration
+var fs = require('fs');
+var config = JSON.parse(fs.readFileSync('./config.json'));
+
 // CLI options
 var enabled = {
   // Disable source maps when `--production`
@@ -23,7 +27,10 @@ var enabled = {
   minify: argv.production,
 };
 
-gulp.task('scripts', function () {
+gulp.task('coffee', function () {
+
+    var source_dir = config.src_dir + config.scripts.src_dir;
+    var dest_dir = config.dest_dir + config.scripts.dest_dir;
     // set up the browserify instance on a task basis
     var b = browserify({
       extensions: ['.coffee']
@@ -34,15 +41,21 @@ gulp.task('scripts', function () {
       header: true
     });
 
-    b.add('./src/scripts/app.coffee')
+    b.add(source_dir + 'app.coffee')
 
     return b.bundle()
-      .pipe(source('./src/scripts/app.coffee'))
-      // .pipe( gulpif( enabled.maps, sourcemaps.init({ loadMaps: true }) ) )
-      .pipe( gulpif( enabled.minify, uglify() ) )
+      .pipe(source(source_dir + 'app.coffee'))
       .on('error', gutil.log)
       .pipe( rename('scripts.js') )
+      // .pipe( gulpif( enabled.maps, sourcemaps.init({ loadMaps: true }) ) )
       // .pipe( gulpif( enabled.maps, sourcemaps.write('.') ) )
-      .pipe( gulp.dest('./build/js/') )
+      .pipe( gulp.dest(dest_dir) )
       .pipe( livereload() );
+});
+
+gulp.task('scripts', ['coffee'], function() {
+  var dest_dir = config.dest_dir + config.scripts.dest_dir;
+  return gulp.src(dest_dir + 'scripts.js')
+      .pipe( gulpif( enabled.minify, uglify() ) )
+      .pipe( gulp.dest(dest_dir) );
 });

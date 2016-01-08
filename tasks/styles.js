@@ -10,6 +10,10 @@ var livereload = require('gulp-livereload');
 var postcss    = require('gulp-postcss');
 var cssnano    = require('gulp-cssnano');
 
+// Configuration
+var fs = require('fs');
+var config = JSON.parse(fs.readFileSync('./config.json'));
+
 // CLI options
 var enabled = {
   // Disable source maps when `--production`
@@ -20,7 +24,10 @@ var enabled = {
 
 gulp.task('styles', function () {
 
-    return gulp.src('src/styles/style.scss')
+    var source_dir = config.src_dir + config.styles.src_dir;
+    var dest_dir = config.dest_dir + config.styles.dest_dir;
+
+    return gulp.src(source_dir + 'style' + config.styles.extension)
         .pipe( gulpif( enabled.maps, sourcemaps.init() ) )
         .pipe( postcss([ 
         	require('postcss-nested'),
@@ -33,6 +40,6 @@ gulp.task('styles', function () {
         .pipe( rename('style.css') )
         .pipe( gulpif( enabled.maps, sourcemaps.write('.') ) )
         .pipe( gulpif( enabled.minify, cssnano() ) )
-        .pipe( gulp.dest('build/css/') )
+        .pipe( gulp.dest(dest_dir) )
         .pipe( livereload() );
 });
